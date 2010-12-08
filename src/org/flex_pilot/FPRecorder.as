@@ -47,13 +47,13 @@ package org.flex_pilot {
   import org.flex_pilot.FPLogger;
   import org.flex_pilot.FlexPilot;
   
-  FP::complete {
-    import mx.events.AdvancedDataGridEvent;
-    import mx.controls.listClasses.AdvancedListBase;
-    import mx.controls.advancedDataGridClasses.AdvancedDataGridBase;
-    import mx.controls.AdvancedDataGrid;
-    import mx.controls.AdvancedDataGridBaseEx;
-  }
+
+  import mx.events.AdvancedDataGridEvent;
+  import mx.controls.listClasses.AdvancedListBase;
+  import mx.controls.advancedDataGridClasses.*;
+  import mx.controls.AdvancedDataGrid;
+  import mx.controls.AdvancedDataGridBaseEx;
+
 
   public class FPRecorder {
    
@@ -118,20 +118,20 @@ package org.flex_pilot {
     {'item':UIComponent , 'itemList':[] , 'eventType':['dragStart' , 'dragDrop']} ,
    ];
   
-  FP::complete  {
-    typesAllowed=[
-     {'item':Slider , 'itemList':[] , 'eventType':['change']} , 
-     {'item':ListBase , 'itemList':[] , 'eventType':['change']} ,
-     {'item':ComboBox , 'itemList':[] , 'eventType':['change']} ,
-     {'item':DateChooser , 'itemList':[] , 'eventType':['change']} ,
-     {'item':DateField , 'itemList':[] , 'eventType':['change']} ,
-     {'item':DataGrid , 'itemList':[] , 'eventType':['columnStretch' , 'headerRelease' , 'itemEditEnd']} ,
-     {'item':UIComponent , 'itemList':[] , 'eventType':['dragStart' , 'dragDrop']} ,
-     {'item':AdvancedListBase , 'itemList':[] , 'eventType':['change' , 'dragStart' , 'dragDrop']} ,
-     {'item':AdvancedDataGridBaseEx , 'itemList':[] , 'eventType':['columnStretch' , 'headerRelease' , 'itemEditEnd']} ,
-     {'item':AdvancedDataGrid , 'itemList':[] , 'eventType':['itemOpen' , 'itemClose']} 
-    ];
-  }
+
+   typesAllowed=[
+    {'item':Slider , 'itemList':[] , 'eventType':['change']} , 
+    {'item':ListBase , 'itemList':[] , 'eventType':['change']} ,
+    {'item':ComboBox , 'itemList':[] , 'eventType':['change']} ,
+    {'item':DateChooser , 'itemList':[] , 'eventType':['change']} ,
+    {'item':DateField , 'itemList':[] , 'eventType':['change']} ,
+    {'item':DataGrid , 'itemList':[] , 'eventType':['columnStretch' , 'headerRelease' , 'itemEditEnd']} ,
+    {'item':UIComponent , 'itemList':[] , 'eventType':['dragStart' , 'dragDrop']} ,
+    {'item':AdvancedListBase , 'itemList':[] , 'eventType':['change' , 'dragStart' , 'dragDrop']} ,
+    {'item':AdvancedDataGridBaseEx , 'itemList':[] , 'eventType':['columnStretch' , 'headerRelease' , 'itemEditEnd']} ,
+    {'item':AdvancedDataGrid , 'itemList':[] , 'eventType':['itemOpen' , 'itemClose']} 
+   ];
+
 
   private static var typesAllowedObj:Object={};
   public function FPRecorder():void {}
@@ -238,92 +238,96 @@ package org.flex_pilot {
     var opts:Object;
     var condTest:Boolean=true;
   
-    FP::complete  {
-      switch(true) {
-        case (e is AdvancedDataGridEvent &&  e.type==AdvancedDataGridEvent.ITEM_OPEN) :
-          condTest=false;
-          opts = new Object;
-          opts.item=e.item;
-          opts.opening=true;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable;
-          _this.generateAction('adgItemOpen', targ , opts);
-          _this.setNoClickZone();
-          break;
-        case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.ITEM_CLOSE) :
-          condTest=false;
-          opts = new Object;
-          opts.item=e.item;
-          opts.opening=false;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable; 
-          _this.generateAction('adgItemClose', targ , opts);
-          _this.setNoClickZone();
-          break;
-        case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.COLUMN_STRETCH) :
-          condTest=false;
-          opts=new Object;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable;
-          opts.localX=Number(e.localX);
-          opts.columnIndex=e.columnIndex;
-          opts.dataField=e.dataField;
-          opts.rowIndex=e.rowIndex;
-          _this.generateAction('adgColumnStretch', targ , opts);
-          _this.setNoClickZone();
-          break;
-        case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.HEADER_RELEASE) :
-          condTest=false;
-          opts = new Object;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable;
-          opts.columnIndex = e.columnIndex;
-          opts.dataField= e.dataField;
-          opts.removeColumnFromSort=e.removeColumnFromSort;
-          _this.generateAction('adgHeaderRelease', targ , opts);
-          _this.setNoClickZone();
-          break;
-        case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.ITEM_EDIT_END) :
-          condTest=false;
-          opts = new Object;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable;
-          opts.columnIndex = e.columnIndex;
-          opts.rowIndex=e.rowIndex;
-          opts.dataField= e.dataField;
-          opts.reason=e.reason;
-          opts.newValue=e.target.itemEditorInstance[e.target.columns[e.columnIndex].editorDataField];
-          _this.generateAction('adgItemEdit', targ , opts);
-          _this.setNoClickZone();
-          break;
-        case (e is IndexChangedEvent && e.type==IndexChangedEvent.HEADER_SHIFT) :
-          condTest=false;
-          opts = new Object;
+    trace('Youre in handleEvent, before the case')
+    trace(e)
+    trace(targ)
+    
+    switch(true) {
+      case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.ITEM_OPEN) :
+        condTest=false;
+        opts = new Object;
+        opts.item=e.item;
+        opts.opening=true;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable;
+        _this.generateAction('adgItemOpen', targ , opts);
+        _this.setNoClickZone();
+        break;
+      case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.ITEM_CLOSE) :
+        condTest=false;
+        opts = new Object;
+        opts.item=e.item;
+        opts.opening=false;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable; 
+        _this.generateAction('adgItemClose', targ , opts);
+        _this.setNoClickZone();
+        break;
+      case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.COLUMN_STRETCH) :
+        condTest=false;
+        opts=new Object;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable;
+        opts.localX=Number(e.localX);
+        opts.columnIndex=e.columnIndex;
+        opts.dataField=e.dataField;
+        opts.rowIndex=e.rowIndex;
+        _this.generateAction('adgColumnStretch', targ , opts);
+        _this.setNoClickZone();
+        break;
+      case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.HEADER_RELEASE) :
+        condTest=false;
+        opts = new Object;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable;
+        opts.columnIndex = e.columnIndex;
+        opts.dataField= e.dataField;
+        opts.removeColumnFromSort=e.removeColumnFromSort;
+        _this.generateAction('adgHeaderRelease', targ , opts);
+        _this.setNoClickZone();
+        break;
+      case (e is AdvancedDataGridEvent && e.type==AdvancedDataGridEvent.ITEM_EDIT_END) :
+        condTest=false;
+        opts = new Object;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable;
+        opts.columnIndex = e.columnIndex;
+        opts.rowIndex=e.rowIndex;
+        opts.dataField= e.dataField;
+        opts.reason=e.reason;
+        opts.newValue=e.target.itemEditorInstance[e.target.columns[e.columnIndex].editorDataField];
+        _this.generateAction('adgItemEdit', targ , opts);
+        _this.setNoClickZone();
+        break;
         
-          opts.newIndex=e.newIndex;
-          opts.oldIndex=e.oldIndex;
-          opts.bubbles=e.bubbles;
-          opts.cancelable=e.cancelable;
-          _this.generateAction('adgHeaderShift', targ , opts);
-          _this.setNoClickZone();
-          break;
-      
-        case (((e is ListEvent 
-          || e is IndexChangedEvent 
-          || e is eventMap[IndexChangedEvent]) 
-          && ( targ is ComboBox 
-            || targ is componentMap[ComboBox] 
-            || targ is ListBase 
-            || targ is componentMap[ListBase] 
-            || targ is AdvancedListBase) ) 
-          && e.type==ListEvent.CHANGE) :
+      case (e is IndexChangedEvent && e.type==IndexChangedEvent.HEADER_SHIFT) :
+        condTest=false;
+        opts = new Object;
+        
+        opts.newIndex=e.newIndex;
+        opts.oldIndex=e.oldIndex;
+        opts.bubbles=e.bubbles;
+        opts.cancelable=e.cancelable;
+        _this.generateAction('adgHeaderShift', targ , opts);
+        _this.setNoClickZone();
+        break;
+        
+      case (((e is ListEvent 
+        || e is IndexChangedEvent) 
+        && ( targ is ComboBox 
+          || targ is ListBase 
+          || targ is AdvancedListBase) ) 
+        && e.type==ListEvent.CHANGE) :
             
-          condTest=false;
-          _this.generateAction('select', targ);
-          _this.resetRecentTarget('change', e);
-          break;
-      }
+        trace('In the case')
+        trace(e)
+        trace(targ)
+        condTest=false;
+        _this.generateAction('select', targ);
+        _this.resetRecentTarget('change', e);
+        break;
     }
+
   
     if (condTest) {
       switch (true) {
@@ -405,11 +409,9 @@ package org.flex_pilot {
         case (((e is ListEvent 
         || e is IndexChangedEvent)
         && ( targ is ComboBox 
-          || targ is componentMap[ComboBox] 
-          || targ is ListBase 
-          || targ is componentMap[ListBase]) ) 
-          && e.type==ListEvent.CHANGE) :
-     
+          || targ is ListBase) 
+          && e.type==ListEvent.CHANGE)) :
+    
           _this.generateAction('select', targ);
           _this.resetRecentTarget('change', e);
           break;

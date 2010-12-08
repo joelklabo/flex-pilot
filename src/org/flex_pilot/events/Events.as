@@ -27,10 +27,10 @@ package org.flex_pilot.events {
   import util.DataGridUtil;
   import util.IndexChangeUtil;
   
-  FP::complete  {
+
   import util.AdvancedDataGridUtil;
   import mx.controls.AdvancedDataGrid;
-  }
+
   
   
 
@@ -277,7 +277,7 @@ package org.flex_pilot.events {
 	
 	}
 	
-	FP::complete
+
 	public static function triggerAdvancedDataGridEvent(obj:* , type:String , ...args):void{
 		var defaults:Array = [
 			['bubbles' , false] , 

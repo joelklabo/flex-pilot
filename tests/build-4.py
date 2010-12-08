@@ -6,13 +6,18 @@ import re
 import shutil
 
 # Location of compiler
-MXMLC_PATH = '/Users/adam/Projects/flex_sdk_4.1.0.16076/bin/mxmlc -debug -verbose-stacktraces -incremental=true -compiler.strict -compiler.show-actionscript-warnings -static-link-runtime-shared-libraries=true -define=FP::complete,false'
+MXMLC_PATH = 'mxmlc -debug -verbose-stacktraces -incremental=true -compiler.strict -compiler.show-actionscript-warnings -static-link-runtime-shared-libraries=true -define=FP::complete,false'
 
 # For replacing .as with .swf
 as_re = re.compile('\.as$|\.mxml$')
 
 def app():
     cmd = MXMLC_PATH + ' -source-path=. -source-path+=../src ./TestApp.mxml -o ./TestApp.swf'
+    print cmd
+    os.system(cmd)
+
+def adg():
+    cmd = MXMLC_PATH + ' -source-path=. -source-path+=../src ./TestAdvancedDataGrid.mxml -o ./TestAdvancedDataGrid.swf'
     print cmd
     os.system(cmd)
 
@@ -79,9 +84,12 @@ def main(o, a):
         wildcards()
     elif target == 'controlbar':
         controlbar()  
+    elif target == 'adg':
+        adg()
     # Build everything, natch
     elif target == 'all':
         app()
+        adg()
         accordion()
         wildcards()
         fptestapp()
