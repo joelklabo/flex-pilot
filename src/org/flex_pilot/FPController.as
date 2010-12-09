@@ -607,20 +607,22 @@ package org.flex_pilot {
       var obj:*= FPLocator.lookupDisplayObject(params);
       obj.expandAll();
     }
+    
+    public static function adgGetTabularData(params:Object, start:int=0, end:int=0):String{
+      var obj:*= FPLocator.lookupDisplayObject(params);
+      trace(obj.automationTabularData.getValues(start,end));
+      return obj.automationTabularData.getValues(start,end);
+    }
 
     public static function adgItemOpen(params:Object):void{
       var obj:*= FPLocator.lookupDisplayObject(params);
       Events.triggerAdvancedDataGridEvent(obj , AdvancedDataGridEvent.ITEM_OPENING ,params);
     }
 
-  
-
     public static function adgItemClose(params:Object):void{
       var obj:*= FPLocator.lookupDisplayObject(params);
       Events.triggerAdvancedDataGridEvent(obj , AdvancedDataGridEvent.ITEM_OPENING ,params);
     }
-
-  
 
     public static function adgColumnStretch(params:Object):void{
       var obj:*= FPLocator.lookupDisplayObject(params);
