@@ -614,30 +614,49 @@ package org.flex_pilot {
       var obj:*= FPLocator.lookupDisplayObject(params);
       obj.expandAll();
     }
-
-    public static function assertTextInAdgCell(params:Object):Boolean{
-        trace("youre in asserTextInAdgCell");
+    
+    public static function assertTextInAdg(params:Object):Boolean{
         var grid:* = FPLocator.lookupDisplayObject(params);
         // Convert ADG to automation delegate to get an array of column names
         var newGrid:* = new AdvancedDataGridAutomationImpl(grid);
         var datas:AdvancedDataGridTabularData = newGrid.automationTabularData as AdvancedDataGridTabularData;
         var columnId:Array = datas.columnNames as Array;
-        trace("got the array of columns");
         // Convert ADG data to an array of rows
         var gridView:HierarchicalCollectionView = grid.dataProvider as HierarchicalCollectionView;
         var gridData:HierarchicalData = gridView.source as HierarchicalData;
         var gridArrayColl:ArrayCollection = gridData.source as ArrayCollection;
         var gridArray:Array = gridArrayColl.source as Array;
-        trace("got the array of rowss");
+        var validator:String = params.validator;
+        
+        for (var i:int = 0; i < gridArray.length; i++) {
+            for (var j:int = 0; j < columnId.length; j++) {
+                if (gridArray[i][columnId[j]] == validator) { return true; }
+            }
+        }
+        
+        throw new Error("Validator not found in ADG.");
+        
+    }
+        
+    
+    public static function assertTextInAdgCell(params:Object):Boolean{
+        var grid:* = FPLocator.lookupDisplayObject(params);
+        // Convert ADG to automation delegate to get an array of column names
+        var newGrid:* = new AdvancedDataGridAutomationImpl(grid);
+        var datas:AdvancedDataGridTabularData = newGrid.automationTabularData as AdvancedDataGridTabularData;
+        var columnId:Array = datas.columnNames as Array;
+        // Convert ADG data to an array of rows
+        var gridView:HierarchicalCollectionView = grid.dataProvider as HierarchicalCollectionView;
+        var gridData:HierarchicalData = gridView.source as HierarchicalData;
+        var gridArrayColl:ArrayCollection = gridData.source as ArrayCollection;
+        var gridArray:Array = gridArrayColl.source as Array;
         // Find value at row/column location passed in
-        var cellContents:String = gridArray[params['rowIndex']][columnId[params['colIndex']]];
-        trace("Value is: " + cellContents);
-        if (params['validator'] == cellContents) {
+        var cellContents:String = gridArray[params.rowIndex][columnId[params.colIndex]];
+        if (params.validator == cellContents) {
             trace("they are equal");
             return true;
         } else {
-            trace("they are NOT equal");
-            return false;
+            throw new Error("Cell value: " + cellContents + " does not match the validator: " + params.validator + " ");
         }
     }
 
