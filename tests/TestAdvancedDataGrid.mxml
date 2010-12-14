@@ -6,12 +6,20 @@
 	
 	<fx:Script>
 		<![CDATA[
+		    import mx.automation.IAutomationObject;
 			import mx.collections.ArrayCollection;
 			import org.flex_pilot.FPBootstrap;
 	        private function init():void {
 	          FPBootstrap.flex_pilotLibPath = 'FlexPilot.swf';
 	          FPBootstrap.init(stage);
 	        }
+			
+			override public function createAutomationIDPart(item:IAutomationObject):Object {
+			  var id:Object = super.createAutomationIDPart(item);
+              id["automationName"] = id["automationIndex"];
+              return id;
+
+			}
 			
 			[Bindable]
 			private var dpFlat:ArrayCollection = new ArrayCollection([
